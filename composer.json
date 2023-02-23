@@ -15,7 +15,8 @@
         "symfony/mailer": "^5.4.21|^6.2.7"
     },
     "require-dev": {
-        "symfony/http-client": "^5.4|^6.0"
+        "symfony/http-client": "^5.4|^6.0",
+        "phpunit/phpunit": "^10.1@dev"
     },
     "autoload": {
         "psr-4": { "Symfony\\Component\\Mailer\\Bridge\\Freshmail\\": "" },
