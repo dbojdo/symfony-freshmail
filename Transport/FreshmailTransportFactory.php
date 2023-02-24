@@ -2,6 +2,7 @@
 
 namespace Symfony\Component\Mailer\Bridge\Freshmail\Transport;
 
+use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
 use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;

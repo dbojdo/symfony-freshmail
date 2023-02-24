@@ -2,10 +2,16 @@
 
 namespace Symfony\Component\Mailer\Bridge\Freshmail\Transport;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\HttpTransportException;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractApiTransport;
 use Symfony\Component\Mime\Email;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class FreshmailApiTransport extends AbstractApiTransport
@@ -74,18 +80,18 @@ final class FreshmailApiTransport extends AbstractApiTransport
                 'name' => $envelope->getSender()->getName(),
                 'email' => $envelope->getSender()->getAddress(),
             ],
-            'recipients' => $this->getRecipients($envelope),
+            'recipients' => $this->prepareRecipients($envelope),
             'contents' => [
                 [
                     'type'=> 'text/html',
                     'body' => $email->getHtmlBody()
                 ]
             ],
-            'attachments' => $this->getAttachments($email)
+            'attachments' => $this->prepareAttachments($email)
         ];
     }
 
-    protected function getRecipients(Envelope $envelope): array
+    protected function prepareRecipients(Envelope $envelope): array
     {
         $recipients = [];
         foreach ($envelope->getRecipients() as $recipient)
@@ -101,7 +107,7 @@ final class FreshmailApiTransport extends AbstractApiTransport
         return $recipients;
     }
 
-    protected function getAttachments(Email $email): array
+    protected function prepareAttachments(Email $email): array
     {
         $attachments = [];
 
