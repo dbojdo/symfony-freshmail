@@ -51,14 +51,8 @@ final class FreshmailApiTransport extends AbstractApiTransport
             throw new HttpTransportException('Could not reach the remote Freshmail server.', $response, 0, $e);
         }
 
-        if (200 !== $statusCode) {
-            if ('error' === ($result['status'] ?? false)) {
-                throw new HttpTransportException(
-                    'Unable to send an email: '.$result['message'].sprintf(' (code %d).', $result['code']), $response
-                );
-            }
-
-            throw new HttpTransportException(sprintf('Unable to send an email (code %d).', $result['code']), $response);
+        if (201 !== $statusCode) {
+            throw new HttpTransportException('Unable to send an email: '. $result['errors'][0], $response);
         }
 
         $firstRecipient = reset($result);
@@ -107,7 +101,7 @@ final class FreshmailApiTransport extends AbstractApiTransport
         return $recipients;
     }
 
-    protected function prepareAttachments(Email $email): array
+    protected function prepareAttachments(Email $email): ?array
     {
         $attachments = [];
 
@@ -123,6 +117,6 @@ final class FreshmailApiTransport extends AbstractApiTransport
             $attachments[] = $att;
 
         }
-        return $attachments;
+        return empty($attachments) ? null: $attachments;
     }
 }

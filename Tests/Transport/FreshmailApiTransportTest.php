@@ -46,7 +46,7 @@ class FreshmailApiTransportTest extends TestCase
             $this->assertSame('<p>Welcome</p>', $body['contents'][0]['body']);
 
             return new MockResponse(json_encode([['id' => 'foobar']]), [
-                'http_code' => 200,
+                'http_code' => 201,
             ]);
         });
 
@@ -66,7 +66,7 @@ class FreshmailApiTransportTest extends TestCase
     public function testSendThrowsForErrorResponse()
     {
         $client = new MockHttpClient(function (string $method, string $url, array $options): ResponseInterface {
-            return new MockResponse(json_encode(['status' => 'error', 'message' => 'i\'m a teapot', 'code' => 418]), [
+            return new MockResponse(json_encode(['errors' => ["message error"]]), [
                 'http_code' => 418,
             ]);
         });
@@ -80,7 +80,7 @@ class FreshmailApiTransportTest extends TestCase
             ->html('<p>Welcome</p>');
 
         $this->expectException(HttpTransportException::class);
-        $this->expectExceptionMessage('Unable to send an email: i\'m a teapot (code 418).');
+        $this->expectExceptionMessage('Unable to send an email: message error');
         $transport->send($mail);
     }
 
