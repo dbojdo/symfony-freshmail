@@ -2,7 +2,7 @@
     "name": "goosfraba/freshmail-mailer",
     "type": "symfony-mailer-bridge",
     "description": "Symfony Freshmail Mailer Bridge",
-    "keywords": [],
+    "keywords": ["freshmail", "symfony", "mailer"],
     "license": "MIT",
     "authors": [
         {
